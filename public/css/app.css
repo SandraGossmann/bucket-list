@@ -1,16 +1,17 @@
 body {
-    background: linear-gradient(#000000, #132135);
+    background: linear-gradient(#b1dfbb, #0b2e13);
     background-attachment: fixed;
     background-position: center center;
     background-size: cover;
-    color: #EEE;
-    font-family: 'Shantell Sans', cursive;
+    color: whitesmoke;
+    font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .flex_div{
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
 }
 
 .flex_between{
@@ -21,6 +22,13 @@ body {
     max-width: 1200px;
     margin: auto;
     padding: 5px;
+}
+
+.title{
+    color: black;
+    text-shadow: 2px 2px 4px whitesmoke;
+    font-size: xxx-large;
+    padding-top: 3%;
 }
 
 a {
@@ -72,7 +80,10 @@ nav li {
     margin-right: 1rem; /*pourcentage de taille en fonction du zoom 1 rem = 10px pour zoom = 100%*/
 }
 
-
+footer{
+    display: flex;
+    justify-content: center;
+}
 
 
 /********************** Module  5  Doctrine   **************************/
