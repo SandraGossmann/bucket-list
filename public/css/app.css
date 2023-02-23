@@ -52,8 +52,12 @@ img {
     min-width: 140px;
 }
 
-h1, h2, h3, h4 {
+h1, h3, h4 {
     margin-top: 0;
+}
+
+h2 {
+    margin-bottom: 4rem;
 }
 
 body > .container {
@@ -88,7 +92,7 @@ footer{
 
 /********************** Module  5  Doctrine   **************************/
 
-.series-list {
+/*.series-list {
     display: grid;
     grid-gap: 10px;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -110,6 +114,17 @@ footer{
     .serie-details {
         grid-template-columns: 300px 1fr;
     }
+}*/
+
+.wish-detail{
+    margin : 2rem 0;
+}
+
+.wish-details{
+    border: 0.2rem dotted whitesmoke;
+    border-radius: 2rem;
+    padding: 0 2rem;
+    box-shadow: 0.5rem 0.5rem 0.8rem #8fd19e;
 }
 
 /*********************** Module 6 Form ******************************/
