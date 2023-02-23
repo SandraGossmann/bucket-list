@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Wish;
+use App\Repository\WishRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,16 +12,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class WishController extends AbstractController
 {
     #[Route('/list', name: 'list')]
-    public function list(): Response
+    public function list(WishRepository $wishRepository): Response
     {
-        //TODO récupérer liste des souhaits
-        return $this->render('/wish/list.html.twig');
+        $wishes = $wishRepository->findBy([], ["dateCreated" => "DESC"]);
+        return $this->render('/wish/list.html.twig', ["wishes" => $wishes]);
     }
 
     #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'])]
-    public function show($id): Response
+    public function show($id, WishRepository $wishRepository): Response
     {
-        //TODO récupérer infos souhaits
-        return $this->render('/wish/show.html.twig');
+        $wish = $wishRepository->find($id);
+        return $this->render('/wish/show.html.twig', ["wish" => $wish]);
+    }
+
+    #[Route('/add', name: 'add')]
+    public function add(WishRepository $wishRepository): Response
+    {
+//        $wish = new Wish();
+//        $wish->setTitle("Faire repousser mes cheveux")
+//            ->setAuthor("Arthur")
+//            ->setDescription("Je n'ai pas envie de devenir chauve")
+//            ->setDateCreated(new \DateTime('now'))
+//            ->setIsPublished(true);
+//
+//        $wishRepository->save($wish, true);
+        //TODO récupérer formulaire
+        return $this->render('/wish/add.html.twig');
     }
 }
