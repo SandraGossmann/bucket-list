@@ -19,9 +19,12 @@ class WishController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'])]
-    public function show($id, WishRepository $wishRepository): Response
+    public function show(int $id, WishRepository $wishRepository): Response
     {
         $wish = $wishRepository->find($id);
+        if (!$wish){
+            throw $this->createNotFoundException("Oops, wish not found !");
+        }
         return $this->render('/wish/show.html.twig', ["wish" => $wish]);
     }
 

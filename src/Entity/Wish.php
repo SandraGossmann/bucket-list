@@ -23,10 +23,10 @@ class Wish
     #[ORM\Column(length: 50)]
     private ?string $author = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column()]
     private ?bool $isPublished = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreated = null;
 
     public function getId(): ?int
