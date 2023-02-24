@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\WishRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: WishRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Wish
 {
     #[ORM\Id]
@@ -15,12 +17,17 @@ class Wish
     private ?int $id = null;
 
     #[ORM\Column(length: 250)]
+    #[Assert\NotBlank(message: "The title is mandatory")]
+    #[Assert\Length(min: 2, max: 250, minMessage: "2 chars minimum", maxMessage: "250 chars maximum")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(max: 3000, maxMessage: "Description is too long !")]
     private ?string $description = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "The author is mandatory")]
+    #[Assert\Length(min: 2, max: 50, minMessage: "2 chars minimum", maxMessage: "50 chars maximum")]
     private ?string $author = null;
 
     #[ORM\Column()]
@@ -75,9 +82,10 @@ class Wish
         return $this->isPublished;
     }
 
-    public function setIsPublished(?bool $isPublished): self
+    #[ORM\PrePersist]
+    public function setIsPublished(): self
     {
-        $this->isPublished = $isPublished;
+        $this->isPublished = true;
 
         return $this;
     }
@@ -87,9 +95,10 @@ class Wish
         return $this->dateCreated;
     }
 
-    public function setDateCreated(?\DateTimeInterface $dateCreated): self
+    #[ORM\PrePersist]
+    public function setDateCreated(): self
     {
-        $this->dateCreated = $dateCreated;
+        $this->dateCreated = new \DateTime();
 
         return $this;
     }

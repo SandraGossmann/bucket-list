@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Wish;
+use App\Form\WishType;
 use App\Repository\WishRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,17 +31,18 @@ class WishController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(WishRepository $wishRepository): Response
+    public function add(WishRepository $wishRepository, Request $request): Response
     {
-//        $wish = new Wish();
-//        $wish->setTitle("Faire repousser mes cheveux")
-//            ->setAuthor("Arthur")
-//            ->setDescription("Je n'ai pas envie de devenir chauve")
-//            ->setDateCreated(new \DateTime('now'))
-//            ->setIsPublished(true);
-//
-//        $wishRepository->save($wish, true);
-        //TODO récupérer formulaire
-        return $this->render('/wish/add.html.twig');
+        $wish = new Wish();
+        $wishForm = $this->createForm(WishType::class, $wish);
+        $wishForm->handleRequest($request);
+
+        if ($wishForm->isSubmitted() && $wishForm->isValid()){
+            $wishRepository->save($wish, true);
+            $this->addFlash("success", "Idea successfully added!");
+            return $this->redirectToRoute('wish_show', ['id' => $wish->getId()]);
+        }
+
+        return $this->render('/wish/add.html.twig', ["wishForm" => $wishForm->createView()]);
     }
 }

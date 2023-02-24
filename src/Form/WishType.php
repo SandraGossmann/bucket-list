@@ -17,8 +17,6 @@ class WishType extends AbstractType
             ->add('title', TextType::class)
             ->add('description', TextareaType::class, ['required' => false])
             ->add('author', TextType::class)
-            ->add('isPublished')
-            ->add('dateCreated')
         ;
     }
 
@@ -26,6 +24,7 @@ class WishType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Wish::class,
+            'required'=> false,
         ]);
     }
 }

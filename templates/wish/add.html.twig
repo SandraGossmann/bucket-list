@@ -6,5 +6,9 @@
 
 {% block body %}
     <h2>Add a wish</h2>
+    {{ form_start(wishForm) }}
+    {{ form_widget(wishForm) }}
+    <button>Add your wish !</button>
+    {{ form_end(wishForm) }}
 {% endblock %}
 
