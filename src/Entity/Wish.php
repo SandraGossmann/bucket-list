@@ -18,7 +18,10 @@ class Wish
 
     #[ORM\Column(length: 250)]
     #[Assert\NotBlank(message: "The title is mandatory")]
-    #[Assert\Length(min: 2, max: 250, minMessage: "2 chars minimum", maxMessage: "250 chars maximum")]
+    #[Assert\Length(
+        min: 2, max: 250,
+        minMessage: "{{ limit }} chars minimum",
+        maxMessage: "{{ limit }} chars maximum")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -27,7 +30,10 @@ class Wish
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: "The author is mandatory")]
-    #[Assert\Length(min: 2, max: 50, minMessage: "2 chars minimum", maxMessage: "50 chars maximum")]
+    #[Assert\Length(
+        min: 2, max: 50,
+        minMessage: "{{ limit }} chars minimum",
+        maxMessage: "{{ limit }} chars maximum")]
     private ?string $author = null;
 
     #[ORM\Column()]
@@ -82,10 +88,10 @@ class Wish
         return $this->isPublished;
     }
 
-    #[ORM\PrePersist]
-    public function setIsPublished(): self
+
+    public function setIsPublished(bool $isPublished): self
     {
-        $this->isPublished = true;
+        $this->isPublished = $isPublished;
 
         return $this;
     }
@@ -95,11 +101,17 @@ class Wish
         return $this->dateCreated;
     }
 
-    #[ORM\PrePersist]
-    public function setDateCreated(): self
+    public function setDateCreated(\DateTime $dateCreated): self
     {
-        $this->dateCreated = new \DateTime();
+        $this->dateCreated = $dateCreated;
 
         return $this;
+    }
+    #[ORM\PrePersist]
+    public function setNewWish()
+    {
+        $this->setDateCreated(new \DateTime());
+        $this->setIsPublished(true);
+
     }
 }
