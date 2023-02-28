@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Wish;
 use App\Form\WishType;
+use App\Repository\CategoryRepository;
 use App\Repository\WishRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,11 +15,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class WishController extends AbstractController
 {
     #[Route('/list', name: 'list')]
-    public function list(WishRepository $wishRepository): Response
+    public function list(CategoryRepository $categoryRepository): Response
     {
-        $wishes = $wishRepository->findByPublished();
-        return $this->render('/wish/list.html.twig', ["wishes" => $wishes]);
+        $catAndWishes = $categoryRepository->findWishByCat();
+
+        return $this->render('/wish/list.html.twig', [
+            "catAndWishes" => $catAndWishes,
+
+            ]);
     }
+    //ou
+    /*
+      #[Route('/list', name: 'list')]
+        public function list(WishRepository $wishRepository): Response
+        {
+        $wishes = $WishRepository->findPublishWishes();
+
+        return $this->render('/wish/list.html.twig', [
+            "wishes" => $wishes,
+
+            ]);
+    }
+
+     */
 
     #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'])]
     public function show(int $id, WishRepository $wishRepository): Response

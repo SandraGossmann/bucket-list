@@ -8,6 +8,7 @@
     <h2>Wish Details</h2>
     <div class="wish-details">
         <h2>{{ wish.title }}</h2>
+        <div class="wish-detail">Category : {{ wish.category.name }}</div>
         <div class="wish-detail">Description : {{ wish.description }}</div>
         <div class="wish-detail">Author : {{ wish.author }}</div>
         <div class="wish-detail">Publication date : {{ wish.dateCreated | date('Y-m-d H:i') }}</div>

@@ -2,13 +2,18 @@
 
 {% block body %}
     <h2>Wish List</h2>
-    <section>
-    {% for wish in wishes %}
-        <a href="{{ path('wish_show', {'id' : wish.id}) }}">
-            <p>{{ loop.index }}/ {{ wish.title }}</p>
-        </a>
-    {% endfor %}
-    </section>    
+    <section class="wish-list">
+        {% for cat in catAndWishes %}
+            <section class="wish-details">
+            <h4>{{ cat.name }}</h4>
+            {% for wish in cat.wishes %}
+                <a href="{{ path('wish_show', {'id' : wish.id}) }}">
+                    <p>{{ loop.index }}/ {{ wish.title }}</p>
+                </a>
+            {% endfor %}
+            </section>
+        {% endfor %}
+    </section>
 {% endblock %}
 
 {% block title %}
