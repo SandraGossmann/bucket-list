@@ -7,6 +7,7 @@ use App\Form\WishType;
 use App\Repository\CategoryRepository;
 use App\Repository\WishRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -53,7 +54,10 @@ class WishController extends AbstractController
     public function add(WishRepository $wishRepository, Request $request): Response
     {
         $wish = new Wish();
+        //valeur par défaut de l'auteur = pseudo de l'utilisateur
+        $wish->setAuthor($this->getUser()->getUserIdentifier());
         $wishForm = $this->createForm(WishType::class, $wish);
+        //$wishForm->add('author', TextType::class, ['attr' => ['value' => $this->getUser()->getUserIdentifier()]]);
         $wishForm->handleRequest($request);
 
         if ($wishForm->isSubmitted() && $wishForm->isValid()){
@@ -63,5 +67,21 @@ class WishController extends AbstractController
         }
 
         return $this->render('/wish/add.html.twig', ["wishForm" => $wishForm->createView()]);
+    }
+
+    #[Route('/update/{id}', name: 'update', requirements: ['id' => '\d+'])]
+    public function update(int $id, WishRepository $wishRepository): Response
+    {
+        $wish = $wishRepository->find($id);
+        if (!$wish){
+            throw $this->createNotFoundException("Oops, wish not found !");
+        }
+
+        $wishForm = $this->createForm(WishType::class, $wish);
+
+        return $this->render('/wish/update.html.twig', [
+            "wish" => $wish,
+            "wishForm" => $wishForm->createView()
+        ]);
     }
 }

@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2>Welcome to Bucket-List !</h2>
+    <h2>Welcome to Bucket-List
+        {% if app.user %}
+            {{ app.user.pseudo | capitalize}}
+        {% endif %}
+        !</h2>
+
 
 {% endblock %}
 
