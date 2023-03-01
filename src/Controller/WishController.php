@@ -6,6 +6,7 @@ use App\Entity\Wish;
 use App\Form\WishType;
 use App\Repository\CategoryRepository;
 use App\Repository\WishRepository;
+use App\Services\Censurator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,7 @@ class WishController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(WishRepository $wishRepository, Request $request): Response
+    public function add(WishRepository $wishRepository, Request $request, Censurator $censurator): Response
     {
         $wish = new Wish();
         //valeur par défaut de l'auteur = pseudo de l'utilisateur
@@ -61,6 +62,18 @@ class WishController extends AbstractController
         $wishForm->handleRequest($request);
 
         if ($wishForm->isSubmitted() && $wishForm->isValid()){
+
+            $words = $this->getParameter('censored_words');
+            foreach ($words as $word){
+                $title = $wish->getTitle();
+                $wish->setTitle($censurator->purify($word, $title));
+            }
+
+            foreach ($words as $word){
+                $description = $wish->getDescription();
+                $wish->setDescription($censurator->purify($word, $description));
+            }
+
             $wishRepository->save($wish, true);
             $this->addFlash("success", "Idea successfully added!");
             return $this->redirectToRoute('wish_show', ['id' => $wish->getId()]);
@@ -70,7 +83,7 @@ class WishController extends AbstractController
     }
 
     #[Route('/update/{id}', name: 'update', requirements: ['id' => '\d+'])]
-    public function update(int $id, WishRepository $wishRepository): Response
+    public function update(int $id, WishRepository $wishRepository, Request $request, Censurator $censurator): Response
     {
         $wish = $wishRepository->find($id);
         if (!$wish){
@@ -78,7 +91,21 @@ class WishController extends AbstractController
         }
 
         $wishForm = $this->createForm(WishType::class, $wish);
+        $wishForm->handleRequest($request);
 
+        if ($wishForm->isSubmitted() && $wishForm->isValid()){
+
+            $words = $this->getParameter('censored_words');
+
+            foreach ($words as $word) {
+                $wish->setTitle($censurator->purify($word, $wish->getTitle()));
+                $wish->setDescription($censurator->purify($word, $wish->getDescription()));
+            }
+
+            $wishRepository->save($wish, true);
+            $this->addFlash("success", "Idea successfully updated!");
+            return $this->redirectToRoute('wish_show', ['id' => $wish->getId()]);
+        }
         return $this->render('/wish/update.html.twig', [
             "wish" => $wish,
             "wishForm" => $wishForm->createView()
